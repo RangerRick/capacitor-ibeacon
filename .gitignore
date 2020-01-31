@@ -1,0 +1,11 @@
+# compiled output
+/dist/
+
+#  dependencies
+node_modules/
+
+# capacitor
+ios/build
+ios/Pods
+ios/public
+ios/**/xcuserdata
