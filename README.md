@@ -1,5 +1,7 @@
 # capacitor-ibeacon
 
+[![CircleCI](https://circleci.com/gh/RangerRick/capacitor-ibeacon/tree/master.svg?style=svg)](https://circleci.com/gh/RangerRick/capacitor-ibeacon/tree/master)
+
 A Capacitor plugin for transmitting and receiving iBeacon regions and ranging over Bluetooth.
 
 Supports:
@@ -36,7 +38,7 @@ IBeacon.startMonitoringForRegion({
 ## Version History
 
 Changes made in the `develop` branch are checked against unit tests upon commit.
-The latest [CHANGELOG.md](https://github.com/RangerRick/moment-javaformat/blob/master/CHANGELOG.md) is then auto-generated from the commit history and merged to `master`.
+The latest [CHANGELOG.md](https://github.com/RangerRick/capacitor-ibeacon/blob/master/CHANGELOG.md) is then auto-generated from the commit history and merged to `master`.
 
 ## Installation
 
