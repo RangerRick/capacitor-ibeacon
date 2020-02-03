@@ -14,6 +14,7 @@ class PluginTests: XCTestCase {
         super.tearDown()
     }
     
+    /*
     func testEcho() {
         // This is an example of a functional test case for a plugin.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
@@ -32,4 +33,5 @@ class PluginTests: XCTestCase {
         
         plugin.echo(call!)
     }
+    */
 }
