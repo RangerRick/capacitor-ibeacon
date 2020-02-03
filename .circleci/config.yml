@@ -51,7 +51,7 @@ jobs:
       docker:
         - image: circleci/node:10
       steps:
-        - cached-checkout
+        - checkout
         - cached-npm-install
         - run:
             name: Run Tests
