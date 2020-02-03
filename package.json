@@ -1,6 +1,6 @@
 {
   "name": "capacitor-ibeacon",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "IBeacon Transmit and Scan",
   "main": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
