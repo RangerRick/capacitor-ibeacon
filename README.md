@@ -33,6 +33,11 @@ IBeacon.startMonitoringForRegion({
 });
 ```
 
+## Version History
+
+Changes made in the `develop` branch are checked against unit tests upon commit.
+The latest [CHANGELOG.md](https://github.com/RangerRick/moment-javaformat/blob/master/CHANGELOG.md) is then auto-generated from the commit history and merged to `master`.
+
 ## Installation
 
 ```shell

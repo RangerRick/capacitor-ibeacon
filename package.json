@@ -10,12 +10,13 @@
     "@capacitor/core": "latest"
   },
   "devDependencies": {
-    "typescript": "^3.2.4",
-    "@capacitor/ios": "latest",
     "@capacitor/android": "latest",
+    "@capacitor/ios": "latest",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
-    "eslint": "^6.8.0"
+    "conventional-changelog-cli": "^2.0.31",
+    "eslint": "^6.8.0",
+    "typescript": "^3.2.4"
   },
   "files": [
     "dist/",
@@ -48,6 +49,7 @@
   "scripts": {
     "build": "npm run clean && tsc",
     "clean": "rm -rf ./dist",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
     "watch": "tsc --watch",
     "lint": "eslint src/**/*.ts",
     "prepublishOnly": "npm run lint && npm run build"
