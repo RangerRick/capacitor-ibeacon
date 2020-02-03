@@ -1,6 +1,6 @@
 {
   "name": "capacitor-ibeacon",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "IBeacon Transmit and Scan",
   "main": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
@@ -10,7 +10,7 @@
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build"
   },
-  "author": "Benjamin Reed <rangerrick@befunk.com>",
+  "author": "Benjamin Reed <github@raccoonfink.com>",
   "license": "MIT",
   "dependencies": {
     "@capacitor/core": "latest"
@@ -29,7 +29,9 @@
   "keywords": [
     "capacitor",
     "plugin",
-    "native"
+    "native",
+    "bluetooth",
+    "ibeacon"
   ],
   "capacitor": {
     "ios": {
