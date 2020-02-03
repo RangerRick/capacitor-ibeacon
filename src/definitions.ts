@@ -15,6 +15,10 @@ export interface IBeaconRegion {
   minor?: number,
 };
 
+export interface IBeaconAdvertisement extends IBeaconRegion {
+  measuredPower?: number,
+};
+
 export type AuthorizationStatus = 'notDetermined' | 'restricted' | 'denied' | 'authorizedAlways' | 'authorizedWhenInUse';
 
 export type LocationErrorType = 'error' | 'rangingError' | 'monitoringError';
@@ -23,7 +27,7 @@ export type RegionState = 'unknown' | 'inside' | 'outside';
 
 export interface IBeaconError {
   /** the error message */
-  error: string,
+  message: string,
   /** the error type */
   type: LocationErrorType,
   /** the region or constraint related to the error */
@@ -42,37 +46,40 @@ export interface IBeaconPlugin {
   stopRangingForRegion(region:IBeaconRegion): Promise<{value:boolean}>;
   getMonitoredRegions(): Promise<{regions: [IBeaconRegion]}>;
   getRangedRegions(): Promise<{regions: [IBeaconRegion]}>;
+  isAdvertising(): Promise<{value:boolean}>;
+  startAdvertising(advertisementData:IBeaconAdvertisement): Promise<{value:boolean}>;
+  stopAdvertising(): Promise<{value:boolean}>;
 
 
   /**
    * Listen for authorization status events
    */
-  addListener(eventName: 'didChangeAuthorization', listenerFunc: (result: { status: AuthorizationStatus }) => void): PluginListenerHandle;
+  addListener(eventName: 'authorizationStatusChanged', listenerFunc: (result: { status: AuthorizationStatus }) => void): PluginListenerHandle;
 
   /**
    * Listen for region state changes
    */
-  addListener(eventName: 'didDetermineState', listenerFunc: (result: { state: RegionState }) => void): PluginListenerHandle;
+  addListener(eventName: 'determinedStateForRegion', listenerFunc: (result: { state: RegionState, region: IBeaconRegion }) => void): PluginListenerHandle;
 
   /**
    * Listen for "entered region" events
    */
-  addListener(eventName: 'didEnterRegion', listenerFunc: (result: { region: IBeaconRegion }) => void): PluginListenerHandle;
+  addListener(eventName: 'enteredRegion', listenerFunc: (result: { region: IBeaconRegion }) => void): PluginListenerHandle;
 
   /**
    * Listen for "exited region" events
    */
-  addListener(eventName: 'didExitRegion', listenerFunc: (result: { region: IBeaconRegion }) => void): PluginListenerHandle;
+  addListener(eventName: 'leftRegion', listenerFunc: (result: { region: IBeaconRegion }) => void): PluginListenerHandle;
 
   /**
    * Listen for "ranged beacons" events (iOS 13+)
    */
-  addListener(eventName: 'didRange', listenerFunc: (result: { regions: [IBeaconRegion] }) => void): PluginListenerHandle;
+  addListener(eventName: 'ranged', listenerFunc: (result: { regions: [IBeaconRegion] }) => void): PluginListenerHandle;
 
   /**
    * Listen for "started monitoring" events
    */
-  addListener(eventName: 'didStartMonitoringFor', listenerFunc: (result: { region: IBeaconRegion }) => void): PluginListenerHandle;
+  addListener(eventName: 'startedMonitoring', listenerFunc: (result: { region: IBeaconRegion }) => void): PluginListenerHandle;
 
   /**
    * Listen for errors

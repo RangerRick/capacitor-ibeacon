@@ -11,33 +11,45 @@ typealias JSArray = [JSObject]
  * here: https://capacitor.ionicframework.com/docs/plugins/ios
  */
 @objc(IBeacon)
-public class IBeacon: CAPPlugin, CLLocationManagerDelegate {
+public class IBeacon: CAPPlugin, CLLocationManagerDelegate, CBPeripheralManagerDelegate {
     var locationManager: CLLocationManager!
     var peripheralManager: CBPeripheralManager!
 
-
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        notifyListeners("didChangeAuthorization", data: [
-            "status": status
-        ])
+        let data = [
+            "status": String(describing: status)
+        ] as [String : Any]
+
+        print("IBeacon.authorizationStatusChanged: \(data)\n")
+        notifyListeners("authorizationStatusChanged", data: data, retainUntilConsumed: true)
     }
 
     public func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
-        notifyListeners("didDetermineState", data: [
-            "state": state
-        ])
+        let data = [
+            "state": String(describing: state),
+            "region": beaconRegionToJson(region as! CLBeaconRegion),
+        ] as [String : Any]
+
+        print("IBeacon.determinedStateForRegion: \(data)\n")
+        notifyListeners("determinedStateForRegion", data: data, retainUntilConsumed: true)
     }
 
     public func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-        notifyListeners("didEnterRegion", data: [
+        let data = [
             "region": beaconRegionToJson(region as! CLBeaconRegion),
-        ])
+        ] as [String : Any]
+
+        print("IBeacon.enteredRegion: \(data)\n")
+        notifyListeners("enteredRegion", data: data, retainUntilConsumed: true)
     }
 
     public func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
-        notifyListeners("didExitRegion", data: [
+        let data = [
             "region": beaconRegionToJson(region as! CLBeaconRegion),
-        ])
+        ] as [String : Any]
+
+        print("IBeacon.leftRegion: \(data)\n")
+        notifyListeners("leftRegion", data: data, retainUntilConsumed: true)
     }
     
     @available(iOS 13.0, *)
@@ -46,93 +58,112 @@ public class IBeacon: CAPPlugin, CLLocationManagerDelegate {
         beacons.forEach { beacon in
             regions.append(beaconToJson(beacon))
         }
-        notifyListeners("didRange", data: [
+        var c = JSObject()
+        c["uuid"] = constraint.uuid.uuidString
+        c["major"] = constraint.major
+        c["minor"] = constraint.minor
+
+        let data = [
             "regions": regions,
-        ])
+            "constraint": c,
+        ] as [String : Any]
+
+        print("IBeacon.ranged: \(data)\n")
+        notifyListeners("ranged", data: data, retainUntilConsumed: true)
     }
 
     public func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
-        notifyListeners("didStartMonitoringFor", data: [
+        let data = [
             "region": beaconRegionToJson(region as! CLBeaconRegion),
-        ])
+        ] as [String : Any]
+
+        print("IBeacon.startedMonitoring: \(data)\n")
+        notifyListeners("startedMonitoring", data: data, retainUntilConsumed: true)
     }
 
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        notifyListeners("error", data: [
-            "error": error.localizedDescription,
+        let data = [
+            "message": error.localizedDescription,
             "type": "error",
-        ])
+        ] as [String: Any]
+
+        print("IBeacon.didFailWithError: \(data)\n")
+        notifyListeners("error", data: data, retainUntilConsumed: true)
     }
 
     @available(iOS 13.0, *)
     public func locationManager(_ manager: CLLocationManager, didFailRangingFor constraint: CLBeaconIdentityConstraint, error: Error) {
         var c = JSObject()
-        c["uuid"] = constraint.uuid
+        c["uuid"] = constraint.uuid.uuidString
         c["major"] = constraint.major
         c["minor"] = constraint.minor
 
-        notifyListeners("error", data: [
+        let data = [
             "region": c,
-            "error": error.localizedDescription,
+            "message": error.localizedDescription,
             "type": "rangingError",
-        ])
+        ] as [String : Any]
+
+        print("IBeacon.didFailRangingFor: \(data)\n")
+        notifyListeners("error", data: data, retainUntilConsumed: true)
     }
 
     public func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
-        notifyListeners("error", data: [
+        let data = [
             "region": beaconRegionToJson(region as! CLBeaconRegion),
-            "error": error.localizedDescription,
+            "message": error.localizedDescription,
             "type": "monitoringError",
-        ])
+        ] as [String : Any]
+
+        print("IBeacon.monitoringDidFailFor: \(data)\n")
+        notifyListeners("error", data: data, retainUntilConsumed: true)
+    }
+
+    public func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+        if (peripheral.state == .poweredOn) {
+            print("IBeacon.peripheralManagerDidUpdateState: powered on");
+        } else {
+            print("IBeacon.peripheralManagerDidUpdateState: no longer powered on");
+        }
+    }
+
+    public override func load() {
+        self.locationManager = CLLocationManager()
+        self.locationManager.delegate = self
+
+        self.peripheralManager = CBPeripheralManager()
+        self.peripheralManager.delegate = self
     }
 
     @objc func isMonitoringAvailable(_ call: CAPPluginCall) {
-        if (CLLocationManager.isMonitoringAvailable(for: CLBeaconRegion.self)) {
-            call.success([
-                "value": true
-            ])
-        } else {
-            call.success([
-                "value": false
-            ])
-        }
+        call.success([
+            "value": CLLocationManager.isMonitoringAvailable(for: CLBeaconRegion.self),
+        ])
     }
 
     @objc func isRangingAvailable(_ call: CAPPluginCall) {
-        if (CLLocationManager.isRangingAvailable()) {
-            call.success([
-                "value": true
-            ])
-        } else {
-            call.success([
-                "value": false
-            ])
-        }
+        call.success([
+            "value": CLLocationManager.isRangingAvailable(),
+        ])
     }
 
     @objc func locationServicesEnabled(_ call: CAPPluginCall) {
-        if (CLLocationManager.locationServicesEnabled()) {
-            call.success([
-                "value": true
-            ])
-        } else {
-            call.success([
-                "value": false
-            ])
-        }
+        call.success([
+            "value": CLLocationManager.locationServicesEnabled(),
+        ])
     }
 
     @objc func requestWhenInUseAuthorization(_ call: CAPPluginCall) {
         self.locationManager.requestWhenInUseAuthorization()
         call.success([
-            "value": true
+            "value": true,
         ])
     }
 
     @objc func requestAlwaysAuthorization(_ call: CAPPluginCall) {
         self.locationManager.requestAlwaysAuthorization()
         call.success([
-            "value": true
+            "value": true,
         ])
     }
     
@@ -144,7 +175,7 @@ public class IBeacon: CAPPlugin, CLLocationManagerDelegate {
 
         self.locationManager.startMonitoring(for: beaconRegion)
         call.success([
-            "value": true
+            "value": true,
         ])
     }
     
@@ -156,7 +187,7 @@ public class IBeacon: CAPPlugin, CLLocationManagerDelegate {
 
         self.locationManager.stopMonitoring(for: beaconRegion)
         call.success([
-            "value": true
+            "value": true,
         ])
     }
 
@@ -168,7 +199,7 @@ public class IBeacon: CAPPlugin, CLLocationManagerDelegate {
 
         self.locationManager.startRangingBeacons(in: beaconRegion)
         call.success([
-            "value": true
+            "value": true,
         ])
     }
     
@@ -180,7 +211,7 @@ public class IBeacon: CAPPlugin, CLLocationManagerDelegate {
 
         self.locationManager.stopRangingBeacons(in: beaconRegion)
         call.success([
-            "value": true
+            "value": true,
         ])
     }
 
@@ -191,7 +222,7 @@ public class IBeacon: CAPPlugin, CLLocationManagerDelegate {
             ret.append(self.beaconRegionToJson(region as! CLBeaconRegion));
         }
         call.success([
-            "regions": ret
+            "regions": ret,
         ])
     }
 
@@ -202,13 +233,41 @@ public class IBeacon: CAPPlugin, CLLocationManagerDelegate {
             ret.append(self.beaconRegionToJson(region as! CLBeaconRegion));
         }
         call.success([
-            "regions": ret
+            "regions": ret,
+        ])
+    }
+
+    @objc func isAdvertising(_ call: CAPPluginCall) {
+        call.success([
+            "value": self.peripheralManager.isAdvertising,
+        ])
+    }
+
+    @objc func startAdvertising(_ call: CAPPluginCall) {
+        guard let beaconRegion = self.getBeacon(call) else {
+            // we don't have to call.error because getBeacon() does it
+            return
+        }
+        let measuredPower = call.getDouble("measuredPower")
+        let advertisedPeripheralData = beaconRegion.peripheralData(withMeasuredPower: measuredPower as NSNumber?)
+        print("IBeacon.startAdvertising: \(advertisedPeripheralData)\n")
+        self.peripheralManager.startAdvertising(advertisedPeripheralData as? [String : Any])
+        call.success([
+            "value": true
+        ])
+    }
+
+    @objc func stopAdvertising(_ call: CAPPluginCall) {
+        print("IBeacon.stopAdvertising)\n")
+        self.peripheralManager.stopAdvertising()
+        call.success([
+            "value": true
         ])
     }
 
     func beaconRegionToJson(_ beacon: CLBeaconRegion) -> JSObject {
         var asJson = JSObject()
-        asJson["uuid"] = beacon.proximityUUID
+        asJson["uuid"] = beacon.proximityUUID.uuidString
         asJson["identifier"] = beacon.identifier
         asJson["major"] = beacon.major
         asJson["minor"] = beacon.minor
@@ -217,24 +276,11 @@ public class IBeacon: CAPPlugin, CLLocationManagerDelegate {
 
     func beaconToJson(_ beacon: CLBeacon) -> JSObject {
         var asJson = JSObject()
-        asJson["uuid"] = beacon.proximityUUID
+        asJson["uuid"] = beacon.proximityUUID.uuidString
         asJson["major"] = beacon.major
         asJson["minor"] = beacon.minor
         return asJson
     }
-
-    /*
-    func stateToJson(_ state: CLRegionState) -> String {
-        switch state {
-            case CLRegionState.unknown:
-                return "unknown"
-            case CLRegionState.inside:
-                return "inside"
-            case CLRegionState.outside:
-                return "outside"
-        }
-    }
-    */
 
     func getBeacon(_ call: CAPPluginCall) -> CLBeaconRegion? {
         guard let identifier = call.getString("identifier") else {

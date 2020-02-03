@@ -15,4 +15,7 @@ CAP_PLUGIN(IBeacon, "IBeacon",
            CAP_PLUGIN_METHOD(stopRangingBeaconsInRegion, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(getMonitoredRegions, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(getRangedRegions, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(isAdvertising, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(startAdvertising, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(stopAdvertising, CAPPluginReturnPromise);
 )
