@@ -9,15 +9,15 @@ declare module "@capacitor/core" {
 export type UUID = string;
 
 export interface IBeaconRegion {
-  identifier: string,
-  uuid: UUID,
-  major?: number,
-  minor?: number,
-};
+  identifier: string;
+  uuid: UUID;
+  major?: number;
+  minor?: number;
+}
 
 export interface IBeaconAdvertisement extends IBeaconRegion {
-  measuredPower?: number,
-};
+  measuredPower?: number;
+}
 
 export type AuthorizationStatus = 'notDetermined' | 'restricted' | 'denied' | 'authorizedAlways' | 'authorizedWhenInUse';
 
@@ -27,28 +27,28 @@ export type RegionState = 'unknown' | 'inside' | 'outside';
 
 export interface IBeaconError {
   /** the error message */
-  message: string,
+  message: string;
   /** the error type */
-  type: LocationErrorType,
+  type: LocationErrorType;
   /** the region or constraint related to the error */
-  region?: IBeaconPlugin,
+  region?: IBeaconPlugin;
 }
 
 export interface IBeaconPlugin {
-  isMonitoringAvailable(): Promise<{value:boolean}>;
-  isRangingAvailable(): Promise<{value:boolean}>;
-  locationServicesEnabled(): Promise<{value:boolean}>;
-  requestWhenInUseAuthorization(): Promise<{value:boolean}>;
-  requestAlwaysAuthorization(): Promise<{value:boolean}>;
-  startMonitoringForRegion(region:IBeaconRegion): Promise<{value:boolean}>;
-  stopMonitoringForRegion(region:IBeaconRegion): Promise<{value:boolean}>;
-  startRangingForRegion(region:IBeaconRegion): Promise<{value:boolean}>;
-  stopRangingForRegion(region:IBeaconRegion): Promise<{value:boolean}>;
+  isMonitoringAvailable(): Promise<{value: boolean}>;
+  isRangingAvailable(): Promise<{value: boolean}>;
+  locationServicesEnabled(): Promise<{value: boolean}>;
+  requestWhenInUseAuthorization(): Promise<{value: boolean}>;
+  requestAlwaysAuthorization(): Promise<{value: boolean}>;
+  startMonitoringForRegion(region: IBeaconRegion): Promise<{value: boolean}>;
+  stopMonitoringForRegion(region: IBeaconRegion): Promise<{value: boolean}>;
+  startRangingForRegion(region: IBeaconRegion): Promise<{value: boolean}>;
+  stopRangingForRegion(region: IBeaconRegion): Promise<{value: boolean}>;
   getMonitoredRegions(): Promise<{regions: [IBeaconRegion]}>;
   getRangedRegions(): Promise<{regions: [IBeaconRegion]}>;
-  isAdvertising(): Promise<{value:boolean}>;
-  startAdvertising(advertisementData:IBeaconAdvertisement): Promise<{value:boolean}>;
-  stopAdvertising(): Promise<{value:boolean}>;
+  isAdvertising(): Promise<{value: boolean}>;
+  startAdvertising(advertisementData: IBeaconAdvertisement): Promise<{value: boolean}>;
+  stopAdvertising(): Promise<{value: boolean}>;
 
 
   /**
@@ -59,7 +59,7 @@ export interface IBeaconPlugin {
   /**
    * Listen for region state changes
    */
-  addListener(eventName: 'determinedStateForRegion', listenerFunc: (result: { state: RegionState, region: IBeaconRegion }) => void): PluginListenerHandle;
+  addListener(eventName: 'determinedStateForRegion', listenerFunc: (result: { state: RegionState; region: IBeaconRegion }) => void): PluginListenerHandle;
 
   /**
    * Listen for "entered region" events

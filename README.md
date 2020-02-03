@@ -35,7 +35,7 @@ IBeacon.startMonitoringForRegion({
 
 ## Installation
 
-```
+```shell
 npm i capacitor-ibeacon
 npx cap sync
 ```
