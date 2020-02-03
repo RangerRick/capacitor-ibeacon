@@ -1,0 +1,9 @@
+# 0.1.0 (2020-02-03)
+
+
+### Features
+
+* add advertising support, clean up events ([129dd8b](https://github.com/RangerRick/capacitor-ibeacon/commit/129dd8b5de0ade034a6a3e523354fda076871971))
+
+
+
