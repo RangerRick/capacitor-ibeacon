@@ -8,7 +8,7 @@ Supports:
 * [ ] Android
 * [ ] Web
 
-The web bluetooth standard seems to be dead in the water, so it is unlikely web will ever be supported.
+The web bluetooth standard seems to be [pretty dead in the water](https://github.com/WebBluetoothCG/web-bluetooth/blob/master/implementation-status.md), so it is unlikely web will ever be supported.
 
 ## Usage
 
