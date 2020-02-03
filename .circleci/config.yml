@@ -47,15 +47,15 @@ commands:
               - node_modules/
 
 jobs:
-#  run-tests:
-#      docker:
-#        - image: circleci/node:10
-#      steps:
-#        - cached-checkout
-#        - cached-npm-install
-#        - run:
-#            name: Run Tests
-#            command: npm --prefer-offline --no-progress run test
+  run-tests:
+      docker:
+        - image: circleci/node:10
+      steps:
+        - cached-checkout
+        - cached-npm-install
+        - run:
+            name: Run Tests
+            command: npm --prefer-offline --no-progress run test
   merge-master:
       docker:
         - image: circleci/node:10
@@ -83,24 +83,23 @@ jobs:
               git push
 
 workflows:
-#  run-tests:
-#    jobs:
-#      - run-tests:
-#          filters:
-#            branches:
-#              ignore:
-#                - develop
-#  run-tests-and-deploy:
-  deploy-to-master:
+  run-tests:
     jobs:
-#      - run-tests:
-#          filters:
-#            branches:
-#              only:
-#                - develop
+      - run-tests:
+          filters:
+            branches:
+              ignore:
+                - develop
+  run-tests-and-deploy:
+    jobs:
+      - run-tests:
+          filters:
+            branches:
+              only:
+                - develop
       - merge-master:
-#          requires:
-#            - run-tests
+          requires:
+            - run-tests
           filters:
             branches:
               only:
