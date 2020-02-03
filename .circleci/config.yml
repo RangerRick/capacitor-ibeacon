@@ -70,7 +70,7 @@ jobs:
         - cached-npm-install
         - run:
             name: Build Artifacts
-            command: npm --prefer-offline --no-progress run build-release
+            command: npm --prefer-offline --no-progress run build
         - generate-changelog
         - run:
             name: Commit and Push Updated Artifacts
@@ -99,8 +99,8 @@ workflows:
 #              only:
 #                - develop
       - merge-master:
-          requires:
-            - run-tests
+#          requires:
+#            - run-tests
           filters:
             branches:
               only:
