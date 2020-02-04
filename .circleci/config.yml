@@ -64,8 +64,9 @@ jobs:
         - run:
             name: Merge Develop to Master
             command: |
+              git pull --ff-only
               git checkout master
-              git pull
+              git pull --ff-only
               git merge -m 'automated merge from develop -> master' --log develop
         - cached-npm-install
         - run:
