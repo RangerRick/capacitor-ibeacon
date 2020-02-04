@@ -19,11 +19,20 @@ export interface IBeaconAdvertisement extends IBeaconRegion {
   measuredPower?: number;
 }
 
-export type AuthorizationStatus = 'notDetermined' | 'restricted' | 'denied' | 'authorizedAlways' | 'authorizedWhenInUse';
+export type AuthorizationStatusType = 'notDetermined' | 'restricted' | 'denied' | 'authorizedAlways' | 'authorizedWhenInUse';
 
 export type LocationErrorType = 'error' | 'rangingError' | 'monitoringError';
 
-export type RegionState = 'unknown' | 'inside' | 'outside';
+export type RegionStateType = 'unknown' | 'inside' | 'outside';
+
+export interface AuthorizationStatus {
+  status: AuthorizationStatusType;
+}
+
+export interface RegionState {
+  state: RegionStateType;
+  region: IBeaconRegion;
+}
 
 export interface IBeaconError {
   /** the error message */
@@ -54,12 +63,12 @@ export interface IBeaconPlugin {
   /**
    * Listen for authorization status events
    */
-  addListener(eventName: 'authorizationStatusChanged', listenerFunc: (result: { status: AuthorizationStatus }) => void): PluginListenerHandle;
+  addListener(eventName: 'authorizationStatusChanged', listenerFunc: (result: AuthorizationStatus) => void): PluginListenerHandle;
 
   /**
    * Listen for region state changes
    */
-  addListener(eventName: 'determinedStateForRegion', listenerFunc: (result: { state: RegionState; region: IBeaconRegion }) => void): PluginListenerHandle;
+  addListener(eventName: 'determinedStateForRegion', listenerFunc: (result: RegionState) => void): PluginListenerHandle;
 
   /**
    * Listen for "entered region" events
