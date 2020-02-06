@@ -79,7 +79,7 @@ jobs:
               git add -A
               if [ `git diff HEAD | wc -l` -gt 0 ]; then
                 echo "code detected; committing updated dist/ as part of the merge"
-                git commit -a --amend
+                git commit --amend -m 'automated merge from develop -> master'
               fi
               git push
 
