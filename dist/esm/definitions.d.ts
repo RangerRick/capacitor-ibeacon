@@ -61,10 +61,10 @@ export interface IBeaconPlugin {
         value: boolean;
     }>;
     getMonitoredRegions(): Promise<{
-        regions: [IBeaconRegion];
+        regions: IBeaconRegion[];
     }>;
     getRangedRegions(): Promise<{
-        regions: [IBeaconRegion];
+        regions: IBeaconRegion[];
     }>;
     isAdvertising(): Promise<{
         value: boolean;
