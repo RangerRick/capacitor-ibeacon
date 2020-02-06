@@ -78,8 +78,8 @@ jobs:
             command: |
               git add -A
               if [ `git diff HEAD | wc -l` -gt 0 ]; then
-                echo "code detected; committing updated dist/"
-                git commit -m 'build: automated generation of dist/'
+                echo "code detected; committing updated dist/ as part of the merge"
+                git commit -a --amend
               fi
               git push
 
