@@ -53,8 +53,8 @@ export interface IBeaconPlugin {
   stopMonitoringForRegion(region: IBeaconRegion): Promise<{value: boolean}>;
   startRangingForRegion(region: IBeaconRegion): Promise<{value: boolean}>;
   stopRangingForRegion(region: IBeaconRegion): Promise<{value: boolean}>;
-  getMonitoredRegions(): Promise<{regions: [IBeaconRegion]}>;
-  getRangedRegions(): Promise<{regions: [IBeaconRegion]}>;
+  getMonitoredRegions(): Promise<{regions: IBeaconRegion[]}>;
+  getRangedRegions(): Promise<{regions: IBeaconRegion[]}>;
   isAdvertising(): Promise<{value: boolean}>;
   startAdvertising(advertisementData: IBeaconAdvertisement): Promise<{value: boolean}>;
   stopAdvertising(): Promise<{value: boolean}>;
