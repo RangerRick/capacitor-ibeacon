@@ -39,7 +39,7 @@ commands:
               - npm-packages-
         - run:
             name: Install Node Dependencies
-            command: npm --prefer-offline --no-progress install
+            command: npm --pure-lockfile --prefer-offline --no-progress install
         - save_cache:
             name: Save Package Cache
             key: npm-packages-{{ .Branch }}-{{ checksum "package-lock.json" }}
@@ -55,7 +55,7 @@ jobs:
         - cached-npm-install
         - run:
             name: Run Tests
-            command: npm --prefer-offline --no-progress run test
+            command: npm run test
   merge-master:
       docker:
         - image: circleci/node:10
@@ -71,7 +71,7 @@ jobs:
         - cached-npm-install
         - run:
             name: Build Artifacts
-            command: npm --prefer-offline --no-progress run build
+            command: npm run build
         - generate-changelog
         - run:
             name: Commit and Push Updated Artifacts
